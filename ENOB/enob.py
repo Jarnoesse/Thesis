@@ -68,8 +68,23 @@ class enob:
         #computing NAD
         self.fft_nad = np.sqrt(squared_sums) / np.sqrt(len(self.h_array) * (len(self.h_array - 3)))
 
+        #computing ENOB
         self.fft_enob = self.nbit - np.log2(self.fft_nad / np.sqrt(1 / 12))
-        print("ENOB", self.fft_enob)
+
+        #computing SINAD
+        max = self.h_array[0]
+        min = self.h_array[0]
+
+        for i in range(0,len(self.h_array)):
+            if self.h_array[i] > max:
+                max = self.h_array[i]
+            if self.h_array[i] < min:
+                min = self.h_array[i]
+
+        amplitude = max - min
+
+        self.fft_sinad = self.fft_enob * 6.02 + 1.76 - 20 * np.log(4095 / amplitude)
+        print("ENOB", self.fft_enob, "SINAD", self.fft_sinad)
 
 
 
